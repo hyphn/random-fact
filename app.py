@@ -7,30 +7,27 @@ RANDOM FACT SITE.
 
 """
 
-# KYOUKAI
-from kyoukai import Kyoukai
-from kyoukai import util
+# HOUSEKEEPING
+import json
 
 # RANDOM
 from random import choice
 
-# HOUSEKEEPING
-import json
+# KYOUKAI
+from kyoukai import Kyoukai, util
+from werkzeug import Response
 
 # ############################
 
 # APP
 app = Kyoukai(__name__)
 
-# SETTINGS
-settings = None
-
 with open('settings.json') as settingsfile:
-    settings = json.load(settingsfile)
+    SETTINGS = json.load(settingsfile)
 
 # SERVER
-ip = settings['server']['ip']
-port = settings['server']['port']
+IP = SETTINGS['server']['ip'] or "0.0.0.0"
+PORT = SETTINGS['server']['port'] or 8080
 
 # ############################
 
@@ -51,17 +48,18 @@ async def index(ctx):
 async def endpoint(ctx, name):
     """The endpoint used in order to gather the facts about the categories."""
 
-    header = {
-        'Content-Type': 'application/json'
-    }
+    if name in SETTINGS['facts']:
+        resp = {"status": 200, "string": choice(SETTINGS['facts'][name])}
+        status = 200
 
-    try:
-        return util.Response({"status": 200, "string": choice(settings['facts'][name])}, status=200, headers=header)
-    except:
-        return util.Response({"status": 404, "error": "That is not a valid category."}, status=200, headers=header)
+    else:
+        resp = {"status": 400, "error": "That is not a valid category."}
+        status = 400
+
+    return Response(json.dumps(resp), status, content_type="application/json")
 
 
 # ############################
 
 # Run our App.
-app.run(ip=ip, port=port)
+app.run(IP, PORT)
