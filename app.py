@@ -64,4 +64,4 @@ async def endpoint(ctx, name):
 # ############################
 
 # Run our App.
-app.run_application(ip=ip, port=port)
+app.run(ip=ip, port=port)
