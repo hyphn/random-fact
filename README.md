@@ -1,10 +1,8 @@
-# Random Birb.
+# Random Fact.
 
-Welcome to the Random Birb repository, inside of here you can find a resource in which hosts the random images API. Inwhich none of the images of which Birb uses are hosted due to the fear of infringing on the terms of another individual.
+This site provides you random facts about random things. Currently designed to be used with animals (as all other good random animal fact apis have vanished/died). Written in lightweight Kyoukai/Python its a ready to go resource!
 
-[If you want to checkout a live version of the API head to here.](https://random.birb.pw/)
-
-[This is a script that automatically renames files to smaller names.](https://gist.github.com/jakeoid/875c617dcc9fb1d67e493e5c65a645db)
+[If you want to checkout a live version of the API head to here.](https://fact.birb.pw/)
 
 # Usage
 
@@ -27,7 +25,7 @@ nano settings.template.json >> settings.json
 python3.5 app.py
 ```
 
-With the standard install you should be able to click [here](http://127.0.0.1:5000/) and access it.
+With the standard install you should be able to click [here](http://127.0.0.1:3000/) and access it.
 
 # Contributing
 
