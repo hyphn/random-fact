@@ -19,11 +19,33 @@ from werkzeug import Response
 
 # ############################
 
+# CLASS FOR SETTINGS
+
+class JSONFile:
+    def __init__(self, filename: str, interval:int = 900, loop=None):
+        self.filename = filename
+        self.interval = interval
+        self._reload()
+        loop = loop or asyncio.get_event_loop()
+        loop.create_task(self._task)
+            
+    def _reload(self):
+        with open(self.filename) as f:
+            self.cache = json.load(f)
+            
+    async def _task(self):
+        await asyncio.sleep(900)
+        self._reload()
+    
+    def __getitem__(self, i):
+        return self.cache[i]
+
+# ###########################
+
 # APP
 app = Kyoukai(__name__)
 
-with open('settings.json') as settingsfile:
-    SETTINGS = json.load(settingsfile)
+SETTINGS = JSONFile("settings.json", loop=app.loop)
 
 # SERVER
 IP = SETTINGS['server']['ip'] or "0.0.0.0"
