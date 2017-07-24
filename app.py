@@ -9,6 +9,7 @@ RANDOM FACT SITE.
 
 # HOUSEKEEPING
 import json
+import asyncio
 
 # RANDOM
 from random import choice
@@ -19,25 +20,38 @@ from werkzeug import Response
 
 # ############################
 
-# CLASS FOR SETTINGS
 
+# CLASS FOR SETTINGS
 class JSONFile:
-    def __init__(self, filename: str, interval:int = 900, loop=None):
+    """Instance of a configuration JSON File."""
+
+    def __init__(self, filename: str, interval: int = 900, loop=None):
+        """Representative of a JSONFile Object.
+
+        You call this when creating a configuration file.
+
+        * filename - The name of the file in which JSON runs from.
+        * interval - The interval in which we call back and reload the file (seconds).
+        * loop - The asynchronous loop that the file will be called through.
+        """
+
         self.filename = filename
         self.interval = interval
         self._reload()
         loop = loop or asyncio.get_event_loop()
-        loop.create_task(self._task)
-            
+        loop.create_task(self._task())
+
     def _reload(self):
         with open(self.filename) as f:
             self.cache = json.load(f)
-            
+
     async def _task(self):
         await asyncio.sleep(900)
         self._reload()
-    
+
     def __getitem__(self, i):
+        """Return the cached item."""
+
         return self.cache[i]
 
 # ###########################
@@ -68,8 +82,10 @@ async def index(ctx):
 # Route listing
 @app.route("/api/v1/endpoints")
 async def endpoints(ctx):
+    """A list of all viable endpoints."""
     return Response(json.dumps(list(SETTINGS['facts'])), 200,
                     content_type="application/json")
+
 
 # Categories.
 @app.route("/api/v1/<name>")
