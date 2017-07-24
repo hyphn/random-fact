@@ -43,6 +43,12 @@ async def index(ctx):
         return util.as_html(content)
 
 
+# Route listing
+@app.route("/api/v1/endpoints")
+async def endpoints(ctx):
+    return Response(json.dumps(list(SETTINGS['facts'])), 200,
+                    content_type="application/json")
+
 # Categories.
 @app.route("/api/v1/<name>")
 async def endpoint(ctx, name):
